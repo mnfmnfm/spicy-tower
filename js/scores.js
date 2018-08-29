@@ -1,6 +1,7 @@
-'use-strict';
+'use strict';
 
 // variable to display n number of top scores if we so choose to
+// It's a little weird to leave this in here with no default... at least put like 1000 so it looks more normal.
 var topN;
 
 function triggerModal() {
@@ -25,6 +26,8 @@ const handleSubmit = (e) => {
   // grab last saved score from recentScores in localStorage
   const lastScore = JSON.parse(localStorage.getItem('recentScore'));
   // reset game over in local storage to prevent showing modal on page by default
+  // You set 'gameOver' to be 'false' and then immediately check whether it's false... you don't
+  // need the conditional.
   localStorage.setItem('gameOver', JSON.stringify(false));
   if (localStorage.getItem('gameOver') === 'false') {
     let modal = document.querySelector('.show-modal');
@@ -56,7 +59,8 @@ function isHighScore(user, newScore) {
     userScores.push({ user: user, score: newScore });
     stringifiedAndSorted = JSON.stringify(sortScores(userScores));
   }
-
+  // You moved the if(user) check up into handleSubmit, so it seems unnecessary here.
+  // and this is probably why, because otherwise you were setting undefined if the user didn't enter a name.
   localStorage.setItem('userScores', stringifiedAndSorted);
 }
 
@@ -70,6 +74,7 @@ function attachEventListeners() {
   const shownForm = document.querySelector('form');
 
   if (shownForm) {
+    // can just be addEventListener('submit', handleSubmit)
     shownForm.addEventListener('submit', (e) => handleSubmit(e));
   }
 
@@ -77,6 +82,7 @@ function attachEventListeners() {
     let pressed = e.keyCode;
     if (pressed === 27) {
       localStorage.setItem('gameOver', 'false');
+      // again, relative URL of 'scoreboard.html' would be better.
       window.location.href = '/spicy-tower/scoreboard.html';
     }
   });
@@ -131,3 +137,4 @@ function displayHighScores(topN = null) {
 triggerModal();
 attachEventListeners();
 displayHighScores(topN);
+// missing newline
