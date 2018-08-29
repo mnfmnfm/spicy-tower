@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Spicy Tower</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- You're pulling in the same font twice here (Bungee Inline, on two succesive links). -->
   <link href="https://fonts.googleapis.com/css?family=Bungee+Inline|Bungee+Shade|Press+Start+2P" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet" />
   <link rel="stylesheet" type="text/css" href="css/reset.css" />
@@ -36,20 +37,26 @@
     <div class="game-instructions">
       <h1>Welcome to Spicy Tower!</h1>
       <h1>Press any key to start.</h1>
+      <!-- Grammar nitpicks! You should maintain parallel structure here... either "use l/r to move and up to jump", 
+           or "Move l/r, jump up". -->
       <p>Move &#8592; &rarr;</p>
       <p>and &uarr; to jump.</p>
     </div>
     <h1 id="time">Time: <time>0</time> seconds</h1>
+    <!-- inline styles are always bad practice; you should use the handy id to style in a CSS file. -->
     <div id="game" style="width: 100%; height: auto;"></div>
     <audio id="music" loop>
+      <!-- weird extra whitespace at the end of the paragraph tag -->
       <p>If you are reading this, it is because your browser does not support the audio element.     </p>
     </audio>
   </main>
+  <!-- indentation is off -->
 <footer>
 
 </footer>
 
-  
+<!-- there is so much unnecessary whitespace here -->
+
 
 
   

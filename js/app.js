@@ -1,10 +1,13 @@
 'use-strict';
 
+// this is useful as you get set up, but should probably be removed from final-product code.
 console.log('link');
 
 // Global varible for game setup, Part I
+// Could include Phaser as a global in .eslintrc.json to avoid the error here.
 var gameScene = new Phaser.Scene('Game'); // create a new scene named "Game"
 
+// Your comments on all these variables, with organization, is AWESOME.
 // Global varibles for platforms & coins
 var gamePlatforms = []; // This array variable holds all the platforms
 var numPlatforms = 7; // This variable specifies the number of platforms the game creates
@@ -27,6 +30,7 @@ var seconds = 0;
 var t;
 
 // our game's configuration
+// why is this using let?
 let config = {
   type: Phaser.AUTO, //Phaser will decide how to render our game (WebGL or Canvas)
   width: 800, // game width
@@ -104,7 +108,7 @@ function generateRandomXCoord(xMin, xMax, xPrev, platWidth){
     var max = Math.floor(xMax);
     var xNew = Math.floor(Math.random() * (max - min)) + min;
     var maxSpace;
-
+    // a little more explanation of what makes this "proper" spacing might be nice!
     if(platWidth === 1){
       maxSpace = 2;
     } else{
@@ -123,12 +127,16 @@ function generateRandomXCoord(xMin, xMax, xPrev, platWidth){
 
 function refillGameMap(gamePlatforms, col, row) {
   // start at gamePlatforms.indexOf(sprite) because loop increments every other row
+  // to be clear, I think let is a good idea and we'll start using it all the time in 301! But the inconsistency is annoying.
   let j = 1;
   // initialize gameMap and assign with a 2D array filled with 0's
   let gameMap = populateGameMap(col, row);
   // hard code ground in game map array
-  gameMap[gameMap.length-1] = gamePlatforms[0].generatePlatform(col); // ground platform is always the first element in the gamePlatforma array
-
+  gameMap[gameMap.length-1] = gamePlatforms[0].generatePlatform(col); // ground platform is always the first element in the gamePlatform array
+  // I think this logic is clearer if you just iterate through gamePlatforms...
+  // for (var i = 1; i < gamePlatforms.length; i++) {
+  //   gameMap[gameMap.length - (2 * i)] = gamePlatforms[i].generatePlatform(col);
+  // }
   for (var i = gameMap.length - 2; i >= 2; i -= 2) {
     if (gamePlatforms[j]) {
       gameMap[i] = gamePlatforms[j].generatePlatform(col);
@@ -151,6 +159,7 @@ gameScene.preload = function() {
 };
 
 gameScene.create = function() {
+  // more inconsistency on const/let vs var
   const gameMap = refillGameMap(generatePlatform(), numColumns, numRows);
   tile = this.physics.add.staticGroup();
   cursors = this.input.keyboard.createCursorKeys();
@@ -158,14 +167,24 @@ gameScene.create = function() {
   // Endgame object creation. Place on page is temporary.
   var endX = gamePlatforms.slice(-1)[0].x;
   var endY = gamePlatforms.slice(-1)[0].y;
+  // You should try to take console.logs out of final code.
   console.log(endX, endY);
-  endGame = this.physics.add.staticGroup();
+  // when I comment out the following line, the game still works... looks like this line was superfluous?
+  // endGame = this.physics.add.staticGroup();
   endGame = this.physics.add.sprite((endX*120), ((numRows-endY-1)*30), 'lava');
   endGame.displayWidth = 50;
   endGame.displayHeight = 150;
   endGame.displayOriginY = 40;
   endGame.body.setSize(30,35, false);
 
+  // this is another spot where I'm confused about how this for loop came to look like this.
+  // it's not clear to me what k represents or why it starts where it does.
+  // to me, this should be...
+  // for (var k = 2; k < gamePlatforms.length; k++) {
+  //   var coinX = gamePlatforms[k][0].x;
+  //   var coinY = gamePlatforms[k][0].y;
+  //   coins.push(this.physics.add...);
+  // }
   for (var k = 3; k < numPlatforms + 2; k++){
     var coinX = gamePlatforms.slice(k-1)[0].x;
     var coinY = gamePlatforms.slice(k-1)[0].y;
@@ -255,6 +274,9 @@ gameScene.create = function() {
   this.physics.add.overlap(player, endGame, ender, null, this);
 };
 
+// You're missing the functionality you had mentioned where the X velocity is different depending on whether they're trying to
+// change direction midair. To get that working, you'd probably need a variable keeping track of the direction they last tried
+// to move while on the ground.
 gameScene.update = function(){
   endGame.anims.play('pour', true);
 
@@ -290,7 +312,7 @@ gameScene.update = function(){
 };
 
 function collectCoin(coin){
-  coin.setCollideWorldBounds(true);
+  //coin.setCollideWorldBounds(true);
   coin.disableBody(false, true);
   coinPointTotal += 300;
   console.log(coinPointTotal);
@@ -308,7 +330,9 @@ function ender(){
 
   setTimeout(function(){
     saveScoreToLocalStorage(t);
-    window.location.href = '/spicy-tower/scoreboard.html';
+    // Using the absolute path here means that you have to run live-server from a weird spot! Would be better to use the relative:
+    // 'scoreboard.html'
+    window.location.href = 'scoreboard.html';
   }, 1000);
 }
 
@@ -338,6 +362,8 @@ function startGame(){
 }
 
 function musicPlayer(){
+  // hey no AJAX allowed
+  // (you should use an audio element for this instead)
   var fileFinder = new XMLHttpRequest();
   var musicPath = '/spicy-tower/music/spicy-tower.mp3';
   var deployPath = '/music/spicy-tower.mp3';
@@ -364,5 +390,6 @@ function saveScoreToLocalStorage(seconds) {
   let newScore = calculateScore(seconds);
 
   localStorage.setItem('recentScore', JSON.stringify(newScore));
+  // glad you got this working as a solution for whether to show the "enter your name" or not!
   localStorage.setItem('gameOver', JSON.stringify(true));
 }
