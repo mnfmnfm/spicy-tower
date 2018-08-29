@@ -100,6 +100,7 @@ h1 {
   text-align: center;
   font-family: sans-serif;
   font-size: 2em;
+  /* missing semicolon */
   margin: 10px
 }
 
@@ -135,6 +136,7 @@ h1 {
 .modal-content label {
   margin: 10px;
   text-align: center;
+  /* seems like you could've just set this font-family for the entire .modal-content? */
   font-family: 'Press Start 2P', cursive;
 }
 
@@ -183,6 +185,7 @@ td, th {
 h1 {
   text-align: center;
   font-size: 40px;
+  /* oh no! resetting the font-family on successive lines... so only the second line wins! */
   font-family: 'Bungee Inline', cursive; 
   font-family: 'Bungee Shade', cursive;   
   color: white;
@@ -207,6 +210,7 @@ h3 {
 
 
 .img-container {
+  /* zombie code is bad */
   /* display: flex; */
   text-align: center;
   width: 100%;
